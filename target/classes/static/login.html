@@ -4,24 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        input {
-            display: block;
-            margin: 10px 0;
-            padding: 10px;
-            width: 300px;
-        }
-        button {
-            padding: 10px 20px;
-        }
-        .message {
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <h1>Login</h1>
@@ -32,38 +15,7 @@
     </form>
     <div id="loginMessage" class="message"></div>
     <p>Don't have an account? <a href="signup.html">Signup here</a></p>
-
- 
-	<script>
-	    const loginForm = document.getElementById('loginForm');
-	    const loginMessageDiv = document.getElementById('loginMessage');
-
-	    loginForm.addEventListener('submit', async (event) => {
-	        event.preventDefault();
-	        const username = document.getElementById('loginUsername').value;
-	        const password = document.getElementById('loginPassword').value;
-
-	        const response = await fetch('/api/auth/login', {
-	            method: 'POST',
-	            headers: {
-	                'Content-Type': 'application/json',
-	            },
-	            body: JSON.stringify({ username, password }),
-	        });
-
-	        if (response.ok) {
-	            const token = await response.text();
-	            localStorage.setItem('token', token);
-	            localStorage.setItem('username', username); // Store username for later use
-	            window.location.href = 'welcome.html'; // Redirect to welcome page
-	        } else {
-	            const data = await response.text();
-	            loginMessageDiv.innerText = data;
-	        }
-	    });
-	</script>
-
-	
-	
+    
+    <script src="js/login.js"></script>
 </body>
-</html> 
+</html>
