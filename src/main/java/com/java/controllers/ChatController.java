@@ -40,8 +40,10 @@ package com.java.controllers;
 import com.java.Entity.ChatMessage;
 import com.java.services.UserService;
 
+import java.security.Principal;
 import java.util.*;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -52,51 +54,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-//@Controller
-//public class ChatController {
-//
-//    private final SimpMessagingTemplate messagingTemplate;
-//    @Autowired
-//    private UserService userService;
-//    
-//
-//    public ChatController(SimpMessagingTemplate messagingTemplate, UserService userService) {
-//        this.messagingTemplate = messagingTemplate;
-//        this.userService = userService;
-//    }
-//
-//    @MessageMapping("/chat.sendMessage")
-//    public void sendMessage(ChatMessage chatMessage) {
-//        messagingTemplate.convertAndSendToUser(chatMessage.getRecipient(), "/queue/messages", chatMessage);
-//    }
-//
-//    // Send updated user list to all clients
-//    public void broadcastOnlineUsers() {
-//    	//Set<String> onlineUsers = userService.getOnlineUsers(); //****
-//        messagingTemplate.convertAndSend("/topic/onlineUsers", userService.getOnlineUsers());
-//    }
-//
-//    // Call this method whenever a user logs in or logs out
-//    public void userLogin(String username) {
-//    	 userService.addUser(username); //***
-//        broadcastOnlineUsers();
-//    }
-//
-//    public void userLogout(String username) {
-//    	userService.removeUser(username); //***
-//        broadcastOnlineUsers();
-//    }
-//    
-//    @MessageMapping("/getOnlineUsers")
-//    public void getOnlineUsers(SimpMessageHeaderAccessor headerAccessor) {
-//        String username = (String) headerAccessor.getSessionAttributes().get("username");
-//        if (username != null) {
-//        	Set<String> onlineUsers = userService.getOnlineUsers(); // Get online users from userService
-//            messagingTemplate.convertAndSendToUser(username, "/queue/onlineUsers", userService.getOnlineUsers());
-//        }
-//    }
-//
-//}
+
 
 @Controller
 public class ChatController {
@@ -111,7 +69,12 @@ public class ChatController {
     }
 
     @MessageMapping("/chat.sendMessage")
-    public void sendMessage(ChatMessage chatMessage) {
+    public void sendMessage(ChatMessage chatMessage, Principal principal) {
+    	 if (principal == null || !chatMessage.getSender().equals(principal.getName())) {
+    	        throw new IllegalArgumentException("Message sender doesn't match authenticated user");
+    	    }
+    	    
+    	
         // Save message to database if needed
         messagingTemplate.convertAndSendToUser(
             chatMessage.getRecipient(),

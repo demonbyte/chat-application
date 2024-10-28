@@ -37,19 +37,5 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials!");
     }
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody User user) {
-//        String token = userService.login(user);
-//        if (token != null) {
-//            return ResponseEntity.ok(token);
-//        }
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials!");
-//    }
-//    
-//
-//    @PostMapping("/logout")
-//    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
-//        userService.logout(token);
-//        return ResponseEntity.ok("Logged out successfully");
-//    }
+
 }

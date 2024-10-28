@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.java.Entity.User;
+import com.java.Util.JwtUtil;
 import com.java.repository.UserRepository;
 
 
@@ -17,6 +18,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private JwtUtil jwtUtil; 
 
     @Autowired
     private PasswordEncoder passwordEncoder; // For encoding passwords
@@ -36,7 +40,9 @@ public class UserService {
         if (existingUser != null && passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
         	
             // Generate and return JWT token here
-            return generateToken(existingUser);
+//            return generateToken(existingUser);
+            return jwtUtil.generateToken(existingUser.getUsername());
+            
         }
         return null; // Invalid credentials
     }
@@ -63,49 +69,4 @@ public class UserService {
 
 }
 
-
-
-
-
-
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.stereotype.Service;
-//
-//import com.java.Entity.User;
-//import com.java.Util.JwtUtil;
-//import com.java.repository.UserRepository;
-//
-//@Service
-//public class UserService {
-//    @Autowired
-//    private UserRepository userRepository;
-//
-//    @Autowired
-//    private JwtUtil jwtUtil;
-//
-//    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//
-//    public User saveUser(User user) {
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        return userRepository.save(user);
-//    }
-//
-//    public User findByUsername(String username) {
-//        return userRepository.findByUsername(username);
-//    }
-//
-//    public boolean checkPassword(User user, String rawPassword) {
-//        return passwordEncoder.matches(rawPassword, user.getPassword());
-//    }
-//
-//    public String login(User user) {
-//        User existingUser = findByUsername(user.getUsername());
-//        if (existingUser != null && checkPassword(existingUser, user.getPassword())) {
-//            return jwtUtil.generateToken(user.getUsername());
-//        }
-//        return null;
-//    }
-//}
 

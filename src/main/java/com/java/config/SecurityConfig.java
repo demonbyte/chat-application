@@ -27,31 +27,23 @@ public class SecurityConfig  {
     @Autowired
     private UserDetailsService jwtUserDetailsService;
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http.csrf().disable()  // Disable CSRF for simplicity
-//            .authorizeRequests()
-//            .requestMatchers("/api/auth/login", "/api/auth/signup", "/static/**").permitAll() // Permit login and signup
-//            .anyRequest().authenticated()  // All other requests require authentication
-//            .and()
-//            .sessionManagement()
-//            .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Use stateless session
-
-
-   // Add JWT filter before UsernamePasswordAuthenticationFilter
-//        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()  // Disable CSRF for simplicity
-            .authorizeHttpRequests()
-            .anyRequest().permitAll() // Allow all requests without authentication
-            .and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Use stateless session
-
+        http
+            .csrf(csrf -> csrf.disable()) 
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/api/auth/login", "/api/auth/signup", "/login.html","/css/**", "/js/**", "/chat.html", "/signup.html").permitAll()
+                .requestMatchers("/chat/**").permitAll() 
+                .anyRequest().authenticated()
+            )
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {

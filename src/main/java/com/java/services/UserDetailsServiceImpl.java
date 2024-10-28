@@ -17,9 +17,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
     private UserRepository userRepository;
 	
-//    public UserDetailsServiceImpl(UserRepository userRepository) {
-//        this.userRepository = userRepository;
-//    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -29,14 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         return UserDetailsImpl.build(user);
-//        return new org.springframework.security.core.userdetails.User(
-//            user.getUsername(),
-//            user.getPassword(),
-//         // mapRolesToAuthorities(user.getRoles())
-//        );
+
     }
 
-//    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Set<String> roles) {
-//        return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-//    }
 }
